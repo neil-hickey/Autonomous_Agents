@@ -34,8 +34,12 @@ public class Bob : Agent {
 		this.stateMachine.Update();
 	}
 
-	public override void SenseEventOccured(SenseEvent theEvent) {
+	public override void checkSenses() {
+		// bob has no sensing
+	}
 
+	public override void SenseEventOccured(SenseEvent theEvent) {
+		// bob doesnt handle sense events
 	}
 
 	public void swapLocation() {

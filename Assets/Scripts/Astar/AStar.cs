@@ -97,12 +97,12 @@ public class AStar {
 
 				switch (this.choice) {
 				case ASTAR_CHOICES.MOVEMENT:
-					currentNode.H = Node.GetTraversalCost (currentNode.position, goal.position);
-					neighbor.H = Node.GetTraversalCost (neighbor.position, goal.position);
+					currentNode.H = Node.getManhattanDistance (currentNode.position, goal.position);
+					neighbor.H = Node.getManhattanDistance (neighbor.position, goal.position);
 					break;
 				case ASTAR_CHOICES.HEARING:
-					currentNode.H = Node.GetTraversalCost (currentNode.position, goal.position);
-					neighbor.H = Node.GetTraversalCost (neighbor.position, goal.position);
+					currentNode.H = Node.getManhattanDistance (currentNode.position, goal.position);
+					neighbor.H = Node.getManhattanDistance (neighbor.position, goal.position);
 					break;
 				}
 

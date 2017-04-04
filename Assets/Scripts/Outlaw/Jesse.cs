@@ -14,8 +14,11 @@ public class Jesse : Agent {
 		init ();
 	}
 		
+	/**
+	 * Initialization function for Jesse
+	 * 	Resets the instance variables and resets the statemachine
+	 */ 
 	public void init() {
-		Debug.Log ("RESETING NEW OUTLAW!");
 		this.isAlive = true;
 		this.totalLoot = 0;
 		this.createdTime = 0;
@@ -39,6 +42,11 @@ public class Jesse : Agent {
 		this.waitedTime = 0;
 	}
 
+	/**
+	 * Rob the bank of a random amount
+	 *  Publishes the event to any subscribers, notifying them of the robbery
+	 *  @return int amount - random int in range (1,10) which Jesse has stolen
+	 */ 
 	public int robBank() {
 		if (OnBankRobbery != null)
 			// broadcast the robbery to subscribers
@@ -56,14 +64,14 @@ public class Jesse : Agent {
 
 	public override void Update () {
 		if (!this.isAlive) {
+			// if Jesse dies, reset the agent
 			init ();
 		} else {
 			this.stateMachine.Update ();
-			checkSenses ();
 		}
 	}
 
-	public void checkSenses() {
+	public override void checkSenses() {
 		// sight 
 //		List<RaycastHit2D> thingsInView = RayCast ("Jesse");
 //		checkSight (thingsInView);
@@ -97,43 +105,19 @@ public class Jesse : Agent {
 			break;
 		}
 	}
-
-
-//	public void RayCast() {
-////		LookAround (this.currentPosition, 2);
-//
-//		Node[,] graph = GameManager.instance.boardScript._nodes;
-//		Node currNode = graph[(int)this.currentPosition.x, (int)this.currentPosition.y];
-//
-//		List<Node> neighbours = currNode.getNeighbours (graph, 2);
-//		foreach (Node neighbor in neighbours) {
-//			if (debugRaycasting)
-//				Debug.DrawLine (this.currentPosition, neighbor.position, Color.blue);
-//
-//			var layerMask = ~( (1 << LayerMask.NameToLayer("Ground")) | (1 << LayerMask.NameToLayer("Jesse")) );
-//
-//			spotted = Physics2D.Linecast (this.currentPosition, neighbor.position, layerMask);
-//			if (spotted) {
-//				RaycastHit2D hitObject = Physics2D.Linecast (this.currentPosition, neighbor.position, layerMask);
-//				GameObject obj = hitObject.collider.gameObject;
-//
-//				if (PlayerManager.instance.playerScriptPairings.ContainsKey (obj)) {
-//					Agent agent;
-//					PlayerManager.instance.playerScriptPairings.TryGetValue (obj, out agent);
-//
-//					if (agent is Wyatt) {
-////						Debug.LogError ("IM LOOKING @ THE SHERIFF");
-//					}
-//				}
-//
-//			}
-//		}
-//	}
-
+		
+	/**
+	 * Helper function to move Jesse to the bank.
+	 */
 	public void moveToBank() {
 		this.goalLocation = Locations.Location.Bank;
 	}
 
+	/**
+	 * Swap Jesse's location to:
+	 *  1) OutlawCamp / Cemetery from the bank
+	 *  2) Swap between cemetery and outlawcamp
+	 */ 
 	public void swapLocation() {
 		switch (this.currentLocation) {
 		case Locations.Location.Bank:

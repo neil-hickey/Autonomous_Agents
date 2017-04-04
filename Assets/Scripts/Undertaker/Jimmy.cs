@@ -5,8 +5,7 @@ using System.Linq;
 using Random = UnityEngine.Random;
 
 public class Jimmy : Agent {
-
-
+	
 	public void Awake () {
 		this.currentLocation = Locations.Location.Undertakers; // where to start undertaker
 		this.currentPosition = Locations.dictionary [currentLocation];
@@ -19,12 +18,10 @@ public class Jimmy : Agent {
 	}
 
 	public override void Update () {
-//		RayCast ("Jimmy");
 		this.stateMachine.Update();
-		checkSenses ();
 	}
 
-	public void checkSenses() {
+	public override void checkSenses() {
 		PlayerManager.Instance.senseAgents (this);
 	}
 

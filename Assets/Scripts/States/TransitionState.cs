@@ -5,14 +5,12 @@ public sealed class TransitionState : State {
 
 	List<Node> path = new List<Node>();
 	State nextState;
-	Locations.Location goalLoc;
 
 	public TransitionState(State nextState) {
 		this.nextState = nextState; // which state to move to after we have moved!
 	}
 
 	public TransitionState (Locations.Location loc, State nextState) {
-		this.goalLoc = loc;
 		this.nextState = nextState; // which state to move to after we have moved!
 	}
 		
@@ -27,7 +25,8 @@ public sealed class TransitionState : State {
 		}
 	}
 		
-	static int x = 2, y = 0;
+	// used to slow down the movement of the agent...
+	static int x = 5, y = 0;
 	public override void Execute (Agent agent) {
 		y++;
 		if (y % x == 0) {

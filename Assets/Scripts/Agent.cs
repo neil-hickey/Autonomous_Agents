@@ -5,6 +5,9 @@ public abstract class Agent : MonoBehaviour {
 	public abstract void Update ();
 	public abstract void ChangeState (State state);
 	public abstract void SenseEventOccured(SenseEvent theEvent);
+	public abstract void checkSenses ();
+
+	// each agent can contain the following
 	public Locations.Location currentLocation;
 	public Locations.Location goalLocation;
 	public StateMachine stateMachine;

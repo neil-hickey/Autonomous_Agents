@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class Wyatt : Agent {
 
+	// declare publish event
 	public delegate void Shootout(Locations.Location loc);
 	public static event Shootout onShootout;
 
@@ -43,12 +44,11 @@ public class Wyatt : Agent {
 
 	}
 
-	public void checkSenses() {
+	public override void checkSenses() {
 		PlayerManager.Instance.senseAgents (this);
 	}
 
 	public override void SenseEventOccured(SenseEvent theEvent) {
-		Debug.Log ("Wyatt has received a sense event!");
 		switch (theEvent.senseType) {
 		case SenseEvent.SenseType.HEARING:
 			Debug.Log("Wyatt can hear something coming from: " + theEvent.sourcePosition);
@@ -58,7 +58,12 @@ public class Wyatt : Agent {
 		}
 	}
 
-public Jesse checkLocationForOutlaw() {
+	/**
+	 * Function to check if the outlaw is in the sheriffs current location
+	 *  Issues a greeting if another agent exists here, but isnt the outlaw
+	 * @return Jesse / null - returns the outlaw agent or null if no outlaw 
+	 */
+	public Jesse checkLocationForOutlaw() {
 		List<Agent> agents = PlayerManager.Instance.getAgentsAtMyLocation (this);
 
 		foreach (Agent agent in agents) {
@@ -98,9 +103,10 @@ public Jesse checkLocationForOutlaw() {
 		Debug.Log("HOWDY!");
 	}
 
+	/**
+	 * Function to swap Wyatts Location randomly, exluding the outlaw camp and the special on the move location
+	 */ 
 	public void swapLocationRandomly() {
-//		this.currentPosition = Locations.dictionary [this.currentLocation];
-
 		// remove the outlaw camp, because the sheriff should never know about it!
 		var data = Enum
 			.GetValues(typeof(Locations.Location))

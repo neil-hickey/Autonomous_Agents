@@ -7,8 +7,11 @@ public class Node  {
 	public GameObject obj { get; set; }
 	public Locations.Location location { get; set; }
 	public Vector3 position { get; set; }
-	public bool isWall { get; set; }
+
+	// reference to this nodes parent node, (for a star)
 	public Node parentNode { get; set; }
+
+	// costs associated with this node, for sound and movement.
 	public float moveCost { get; set; }
 	public float soundCost { get; set; }
 
@@ -17,33 +20,12 @@ public class Node  {
 	public float H { get; set; } // here to end
 	public float F { get { return this.G + this.H; } } // Estimated total cost (F = G + H)
 
-	public Node () {
-		isWall = false;
-	}
+	public Node() { }
 
-	public bool IsWalkable() {
-		return !isWall;
-	}
-
-	public Node(Vector3 pos) : this() {
+	public Node(Vector3 pos) {
 		this.position = pos;
 	}
-
-	public Node (GameObject obj, Vector3 pos, float moveCost) : this() {
-		this.obj = obj;
-		this.position = pos;
-		this.G = moveCost;
-		this.moveCost = moveCost;
-	}
-
-	public Node (GameObject obj, Locations.Location loc, Vector3 pos, float moveCost) : this() {
-		this.obj = obj;
-		this.location = loc;
-		this.position = pos;
-		this.G = moveCost;
-		this.moveCost = moveCost;
-	}
-		
+				
 	public List<Node> getNeighbours(Node[,] _nodes, int N) {
 		List<Node> neighbors = new List<Node> ();
 		int x = (int)position.x;
@@ -72,11 +54,20 @@ public class Node  {
 		return neighbors;
 	}
 
+	/**
+	 * Is this node within the boundary of the game map
+	 * @param Node[,] _nodes - Game Map Nodes
+	 * @param int x, y - position to check
+	 * @return bool - is within the bounds
+	 */
 	public bool isValid(Node[,] _nodes, int x, int y) {
 		return (x >= 0 && x < _nodes.GetLength (0) && y >= 0 && y < _nodes.GetLength (1));
 	}
 
-	/// Gets or sets the parent node. The start node's parent is always null.
+	/**
+	 * Gets or sets the parent node. The start node's parent is always null.
+	 * @return Node - parent node of this node
+	 */ 
 	public Node ParentNode {
 		get { return this.parentNode; }
 		set {
@@ -86,12 +77,22 @@ public class Node  {
 		}
 	}
 
-	public static float GetTraversalCost(Vector3 a, Vector3 b) {
-		float deltaX = a.x - b.x;
-		float deltaY = a.y - b.y;
-		return (float) Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+	/**
+	 * Heuristic used in A Star
+	 * Manhattan Distance - The distance between two points measured along axes at right angles
+	 * 
+	 * @return float - manahattan distance between two vectors
+	 */  
+	public static float getManhattanDistance(Vector3 a, Vector3 b) {
+		float deltaX = Math.Abs(a.x - b.x);
+		float deltaY = Math.Abs(a.y - b.y);
+		return (float) deltaX + deltaY;
 	}
 		
+	/**
+	 * Return a string representation of this node.
+	 * @return String
+	 */ 
 	public String toString() {
 		return "(" + this.position.x + "," + this.position.y + ":" + this.F + ")";
 	}
