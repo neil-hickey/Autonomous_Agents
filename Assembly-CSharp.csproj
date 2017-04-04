@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{B2B58FB2-4462-6B0C-A872-40DD957E5FE0}</ProjectGuid>
+    <ProjectGuid>{ED7938E6-FCD6-EF24-FA71-4620485C1F35}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -46,7 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\DepositAtBank.cs" />
      <Compile Include="Assets\LeanPool\Examples\SimpleDelayedPooling.cs" />
      <Compile Include="Assets\LeanPool\Examples\SimplePoolBenchmark.cs" />
      <Compile Include="Assets\LeanPool\Examples\SimplePooling.cs" />
@@ -78,6 +77,7 @@
      <Compile Include="Assets\Scripts\States\OutlawStates\LurkState.cs" />
      <Compile Include="Assets\Scripts\States\OutlawStates\RobState.cs" />
      <Compile Include="Assets\Scripts\States\SheriffStates\CelebrateState.cs" />
+     <Compile Include="Assets\Scripts\States\SheriffStates\DepositAtBank.cs" />
      <Compile Include="Assets\Scripts\States\SheriffStates\PatrolState.cs" />
      <Compile Include="Assets\Scripts\States\State.cs" />
      <Compile Include="Assets\Scripts\States\StateMachine\StateMachine.cs" />

@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{2D8B91DE-55CC-E566-B6BC-2FAF6B82DFCD}") = "Autonomous Agents", "Assembly-CSharp.csproj", "{ED7938E6-FCD6-EF24-FA71-4620485C1F35}"
+EndProject
+Project("{2D8B91DE-55CC-E566-B6BC-2FAF6B82DFCD}") = "Autonomous Agents", "Assembly-CSharp-Editor.csproj", "{F407E4BC-4971-5268-9F8E-E0FEEBC92074}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED7938E6-FCD6-EF24-FA71-4620485C1F35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED7938E6-FCD6-EF24-FA71-4620485C1F35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED7938E6-FCD6-EF24-FA71-4620485C1F35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED7938E6-FCD6-EF24-FA71-4620485C1F35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F407E4BC-4971-5268-9F8E-E0FEEBC92074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F407E4BC-4971-5268-9F8E-E0FEEBC92074}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F407E4BC-4971-5268-9F8E-E0FEEBC92074}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F407E4BC-4971-5268-9F8E-E0FEEBC92074}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
