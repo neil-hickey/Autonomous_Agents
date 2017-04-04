@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour {
 	public static PlayerManager Instance {get{return instance;}}
 
 	public List<GameObject> players;
+	private List<Agent> agents = new List<Agent> (); 
 
 	public Dictionary<GameObject, Agent> playerScriptPairings = new Dictionary<GameObject, Agent>();
 
@@ -59,8 +60,27 @@ public class PlayerManager : MonoBehaviour {
 
 	public void updatePlayers() {
 		updateMovement ();
+		agents = new List<Agent> ();
 	}
 		
+	public void senseAgents(Agent agent) {
+//		if (!agents.Contains(agent)) {
+			Vector3 agentPosition = agent.currentPosition;
+
+			foreach (KeyValuePair<GameObject, Agent> entry in playerScriptPairings) {
+				if (agent.GetType() != entry.Value.GetType()) {
+					List<Node> soundSensing = new AStar(AStar.ASTAR_CHOICES.HEARING, 10).findPath (agent.currentPosition, entry.Value.currentPosition);
+					if (soundSensing.Count > 0 && soundSensing [soundSensing.Count - 1].position == entry.Value.currentPosition) {
+						// publish event to both parties... and remove other party from next iterations
+						agent.SenseEventOccured(new SenseEvent(SenseEvent.SenseType.HEARING, 1, entry.Value.currentPosition));
+//						entry.Value.SenseEventOccured(new SenseEvent(SenseEvent.SenseType.HEARING, 1, agent.currentPosition));
+//						agents.Add (entry.Value);
+					}
+				}
+			}
+//		}
+	}
+
 	private void updateMovement() {
 		foreach (KeyValuePair<GameObject, Agent> entry in playerScriptPairings) {
 			if (entry.Key.transform.position != entry.Value.currentPosition) {

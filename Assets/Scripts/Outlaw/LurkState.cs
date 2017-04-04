@@ -24,7 +24,6 @@ public sealed class LurkState : State {
 		var _agent = (Jesse)agent;
 
 		_agent.IncreaseWaitedTime(1);
-//		Debug.Log("...waiting for " + agent.waitedTime + " cycle" + (agent.waitedTime > 1 ? "s" : "") + " so far...");
 		if (_agent.WaitedLongEnough ()) {
 			y++;
 			if (y % x == 0) {

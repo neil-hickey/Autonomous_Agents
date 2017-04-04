@@ -18,7 +18,7 @@ public sealed class TransitionState : State {
 		
 	public override void Enter (Agent agent) {
 		agent.currentLocation = Locations.Location.OnTheMove;
-		this.path = new AStar().findPath (agent.currentPosition, agent.GoalPosition);
+		this.path = new AStar(AStar.ASTAR_CHOICES.MOVEMENT).findPath (agent.currentPosition, agent.GoalPosition);
 
 		if (PlayerManager.Instance.debugMovement) {
 			foreach (Node n in this.path) {
@@ -27,7 +27,7 @@ public sealed class TransitionState : State {
 		}
 	}
 		
-	static int x = 5, y = 0;
+	static int x = 2, y = 0;
 	public override void Execute (Agent agent) {
 		y++;
 		if (y % x == 0) {

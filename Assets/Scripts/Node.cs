@@ -10,6 +10,7 @@ public class Node  {
 	public bool isWall { get; set; }
 	public Node parentNode { get; set; }
 	public float moveCost { get; set; }
+	public float soundCost { get; set; }
 
 	// a star costs
 	public float G { get; set; } // start to here

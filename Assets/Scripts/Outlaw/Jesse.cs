@@ -65,9 +65,10 @@ public class Jesse : Agent {
 
 	public void checkSenses() {
 		// sight 
-		List<RaycastHit2D> thingsInView = RayCast ("Jesse");
-		checkSight (thingsInView);
+//		List<RaycastHit2D> thingsInView = RayCast ("Jesse");
+//		checkSight (thingsInView);
 
+		PlayerManager.Instance.senseAgents (this);
 	}
 
 	public void checkSight(List<RaycastHit2D> thingsInView) {
@@ -89,7 +90,8 @@ public class Jesse : Agent {
 
 	public override void SenseEventOccured(SenseEvent theEvent) {
 		switch (theEvent.senseType) {
-		case SenseEvent.SenseType.SIGHT:
+		case SenseEvent.SenseType.HEARING:
+			Debug.Log("Jesse can hear something coming from: " + theEvent.sourcePosition);
 			break;
 		default:
 			break;

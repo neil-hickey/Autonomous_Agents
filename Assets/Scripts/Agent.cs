@@ -12,7 +12,7 @@ public abstract class Agent : MonoBehaviour {
 	public Vector3 currentPosition;
 	public Vector3 goalPosition; 
 	public bool spotted = false;
-	public bool debugRaycasting = true;
+	public bool debugRaycasting = false;
 	public bool isAlive = true;
 
 	public Vector3 GoalPosition {
@@ -34,8 +34,8 @@ public abstract class Agent : MonoBehaviour {
 
 		List<Node> neighbours = currNode.getNeighbours (graph, 2);
 		foreach (Node neighbor in neighbours) {
-			if (debugRaycasting)
-				Debug.DrawLine (this.currentPosition, neighbor.position, Color.blue);
+//			if (debugRaycasting)
+//				Debug.DrawLine (this.currentPosition, neighbor.position, Color.blue);
 
 			var layerMask = ~(1 << LayerMask.NameToLayer (name));
 

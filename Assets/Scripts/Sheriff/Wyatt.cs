@@ -24,63 +24,41 @@ public class Wyatt : Agent {
 
 	public override void Update () {
 		this.stateMachine.Update();
-
-		List<RaycastHit2D> objs = RayCast ("Wyatt");
-		if (objs.Count > 0) {
-			foreach (RaycastHit2D o in objs) {
-				GameObject go = o.collider.gameObject;
-				if (PlayerManager.Instance.playerScriptPairings.ContainsKey (go)) {
-					Agent agent;
-					PlayerManager.Instance.playerScriptPairings.TryGetValue (go, out agent);
-
-					if (agent is Jesse) {
-						Debug.LogError ("IM LOOKING @ THE OUTLAW");
-					}
-				}
-			}
-		}
+//		checkSenses ();
+//
+//		List<RaycastHit2D> objs = RayCast ("Wyatt");
+//		if (objs.Count > 0) {
+//			foreach (RaycastHit2D o in objs) {
+//				GameObject go = o.collider.gameObject;
+//				if (PlayerManager.Instance.playerScriptPairings.ContainsKey (go)) {
+//					Agent agent;
+//					PlayerManager.Instance.playerScriptPairings.TryGetValue (go, out agent);
+//
+//					if (agent is Jesse) {
+//						Debug.LogError ("IM LOOKING @ THE OUTLAW");
+//					}
+//				}
+//			}
+//		}
 
 	}
 
+	public void checkSenses() {
+		PlayerManager.Instance.senseAgents (this);
+	}
+
 	public override void SenseEventOccured(SenseEvent theEvent) {
+		Debug.Log ("Wyatt has received a sense event!");
 		switch (theEvent.senseType) {
-		case SenseEvent.SenseType.SIGHT:
+		case SenseEvent.SenseType.HEARING:
+			Debug.Log("Wyatt can hear something coming from: " + theEvent.sourcePosition);
 			break;
 		default:
 			break;
 		}
 	}
 
-//	public override void RayCast() {
-//		Node[,] graph = GameManager.instance.boardScript._nodes;
-//		Node currNode = graph[(int)this.currentPosition.x, (int)this.currentPosition.y];
-//
-//		List<Node> neighbours = currNode.getNeighbours (graph, 2);
-//		foreach (Node neighbor in neighbours) {
-//			if (debugRaycasting)
-//				Debug.DrawLine (this.currentPosition, neighbor.position, Color.blue);
-//
-//			var layerMask = ~((1 << LayerMask.NameToLayer ("Ground")) | (1 << LayerMask.NameToLayer ("Wyatt")));
-//
-//			spotted = Physics2D.Linecast (this.currentPosition, neighbor.position, layerMask);
-//			if (spotted) {
-//				RaycastHit2D hitObject = Physics2D.Linecast (this.currentPosition, neighbor.position, layerMask);
-//				GameObject obj = hitObject.collider.gameObject;
-//
-//				if (PlayerManager.instance.playerScriptPairings.ContainsKey (obj)) {
-//					Agent agent;
-//					PlayerManager.instance.playerScriptPairings.TryGetValue (obj, out agent);
-//
-//					if (agent is Jesse) {
-////						Debug.LogError ("IM LOOKING @ THE OUTLAW");
-//					}
-//				}
-//
-//			}
-//		}
-//	}
-//
-	public Jesse checkLocationForOutlaw() {
+public Jesse checkLocationForOutlaw() {
 		List<Agent> agents = PlayerManager.Instance.getAgentsAtMyLocation (this);
 
 		foreach (Agent agent in agents) {
@@ -103,8 +81,6 @@ public class Wyatt : Agent {
 
 		if (onShootout != null) {
 			// broadcast the shootout to subscribers
-			Debug.LogError (this.currentLocation);
-			Debug.LogError (jesse.currentLocation);
 			onShootout (this.currentLocation);
 		}
 

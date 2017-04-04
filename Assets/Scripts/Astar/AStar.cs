@@ -6,11 +6,23 @@ using System.Linq;
 
 public class AStar {
 
+	public enum ASTAR_CHOICES {MOVEMENT, HEARING};
 	public static BoardManager boardManager { get; set; }
 	private Node[,] graph;
+	private ASTAR_CHOICES choice = ASTAR_CHOICES.MOVEMENT;
+	private float boundary = 0.0f;
 
-	public AStar() {
+	public AStar(ASTAR_CHOICES choice) {
 		// map a copy of the map, because we are editing the G / F values of the nodes...
+		this.choice = choice;
+		copyNodes (boardManager._nodes);
+
+	}
+
+	public AStar(ASTAR_CHOICES choice, float boundary) {
+		// map a copy of the map, because we are editing the G / F values of the nodes...
+		this.choice = choice;
+		this.boundary = boundary;
 		copyNodes (boardManager._nodes);
 	}
 
@@ -21,7 +33,15 @@ public class AStar {
 			for (int j = 0; j < graph.GetLength(1); j++) {
 				this.graph [i, j] = graph [i, j];
 				this.graph [i, j].parentNode = new Node();
-				this.graph [i, j].G = this.graph [i, j].moveCost;
+				switch (this.choice) {
+				case ASTAR_CHOICES.MOVEMENT:
+					this.graph [i, j].G = this.graph [i, j].moveCost;
+					break;
+				case ASTAR_CHOICES.HEARING:
+					this.graph [i, j].G = this.graph [i, j].soundCost;
+//					Debug.Log (this.graph [i, j].G);
+					break;
+				}
 			}
 		}
 	}
@@ -75,8 +95,17 @@ public class AStar {
 				int neighborX = (int)neighbor.position.x;
 				int neighborY = (int)neighbor.position.y;
 
-				currentNode.H = Node.GetTraversalCost (currentNode.position, goal.position);
-				neighbor.H = Node.GetTraversalCost (neighbor.position, goal.position);
+				switch (this.choice) {
+				case ASTAR_CHOICES.MOVEMENT:
+					currentNode.H = Node.GetTraversalCost (currentNode.position, goal.position);
+					neighbor.H = Node.GetTraversalCost (neighbor.position, goal.position);
+					break;
+				case ASTAR_CHOICES.HEARING:
+					currentNode.H = Node.GetTraversalCost (currentNode.position, goal.position);
+					neighbor.H = Node.GetTraversalCost (neighbor.position, goal.position);
+					break;
+				}
+
 				var cost = neighbor.G;
 
 				if (openSet.ContainsKey (neighbor) && cost < graph [neighborX, neighborY].G) {
@@ -99,9 +128,19 @@ public class AStar {
 	public List<Node> getPath(Node endNode) {
 		List<Node> path = new List<Node>();
 		Node node = endNode;
-		while (node.ParentNode != null) {
-			path.Add(node);
-			node = node.ParentNode;
+
+		if (this.boundary > 0) {
+			this.boundary -= node.G;
+			while (node.ParentNode != null && this.boundary > 0) {
+				path.Add (node);
+				node = node.ParentNode;
+				this.boundary -= node.G;
+			}
+		} else {
+			while (node.ParentNode != null) {
+				path.Add (node);
+				node = node.ParentNode;
+			}
 		}
 
 		// Reverse the list so it's in the correct order when returned

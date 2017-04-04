@@ -19,25 +19,22 @@ public class Jimmy : Agent {
 	}
 
 	public override void Update () {
-		RayCast ("Jimmy");
+//		RayCast ("Jimmy");
 		this.stateMachine.Update();
+		checkSenses ();
+	}
+
+	public void checkSenses() {
+		PlayerManager.Instance.senseAgents (this);
 	}
 
 	public override void SenseEventOccured(SenseEvent theEvent) {
-
+		switch (theEvent.senseType) {
+		case SenseEvent.SenseType.HEARING:
+			Debug.Log("Jimmy can hear something coming from: " + theEvent.sourcePosition);
+			break;
+		default:
+			break;
+		}
 	}
-
-//	public override void RayCast() {
-//		Node[,] graph = GameManager.instance.boardScript._nodes;
-//		Node currNode = graph[(int)this.currentPosition.x, (int)this.currentPosition.y];
-//
-//		List<Node> neighbours = currNode.getNeighbours (graph, 2);
-//		foreach (Node neighbor in neighbours) {
-//			Debug.DrawLine (this.currentPosition, neighbor.position, Color.blue);
-//			var layerMask = ~( (1 << LayerMask.NameToLayer("Ground")) | (1 << LayerMask.NameToLayer("Jimmy")) );
-//
-//			spotted = Physics2D.Linecast (this.currentPosition, neighbor.position, layerMask);
-//		}
-//	}
-
 }

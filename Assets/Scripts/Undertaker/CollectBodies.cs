@@ -15,7 +15,7 @@ public class CollectBodies : State {
 
 	public override void Execute (Agent agent) {
 		agent.goalLocation = Locations.Location.Cemetery;
-		agent.moveToState (new WaitForShootoutState(CollectBodies.Instance));
+		agent.moveToState (WaitForShootoutState.Instance);
 
 	}
 

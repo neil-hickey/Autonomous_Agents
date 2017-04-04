@@ -10,8 +10,8 @@ public class BoardManager : MonoBehaviour {
 
 	// constants 
 	public const float BUILDING_MOVEMENT_COST = 500.0f;
-	public const float TERRAIN_MOVEMENT_COST = 5.0f;
-	public const float MOUNTAIN_MOVEMENT_COST = 15.0f;
+	public const float TERRAIN_MOVEMENT_COST = 5.0f, TERRAIN_SOUND_COST = 1.0f;
+	public const float MOUNTAIN_MOVEMENT_COST = 15.0f, MOUNTAIN_SOUND_COST = 20.0f;
 	public const float tileSize = 1f;
 
 	// Delegates / events
@@ -112,7 +112,8 @@ public class BoardManager : MonoBehaviour {
 
 					_groundTiles [x, y] = _debugTile;
 					_nodes [x, y].position = tile.transform.position;
-					_nodes [x, y].moveCost = TERRAIN_MOVEMENT_COST;
+					setupCosts (_nodes [x, y], TERRAIN_MOVEMENT_COST, TERRAIN_SOUND_COST);
+//					_nodes [x, y].moveCost = TERRAIN_MOVEMENT_COST;
 				}
 			}
 		}
@@ -139,8 +140,9 @@ public class BoardManager : MonoBehaviour {
 		for (int x = 0; x < MapSize.x; x++) {
 			for (int y = 0; y < MapSize.y; y++) {
 				if (mapGenerator.map [x, y] == 0) {
-					LayoutTile (new Vector3 (x, y, 0), mountainTiles, MOUNTAIN_MOVEMENT_COST);
-				
+					Node mountainNode = LayoutTile (new Vector3 (x, y, 0), mountainTiles);
+					setupCosts (mountainNode, MOUNTAIN_MOVEMENT_COST, MOUNTAIN_SOUND_COST);
+
 					// bit of fancy 2D to 1D array conversions..
 					// basically -> if x = 1, y = 1, its actually position 11 if mapysize is 10
 					// but hey its a 1d and we are removing.. so its shrinking, account for that!
@@ -150,60 +152,48 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 	}
-
-	/*
-	 * LayoutObjectAtRandom accepts an array of game objects to choose from along
-	 * with a minimum and maximum range for the number of objects to create.
-	 */
-	void LayoutBuildingsAtRandom (GameObject[] tileArray, int minimum, int maximum) {
-		//Choose a random number of objects to instantiate within the minimum and maximum limits
-		int objectCount = Random.Range (minimum, maximum + 1);
-
-		// Instantiate objects until the randomly chosen limit objectCount is reached
-		for (int i = 0; i < objectCount; i++) {
-			//Choose a position for randomPosition by getting a random position from our list of available Vector3s stored in gridPosition
-			Vector3 randomPosition = RandomPosition();
-
-			LayoutTile (randomPosition, tileArray, BUILDING_MOVEMENT_COST);
-		}
-	}
-
-	void LayoutTile (Vector3 pos, GameObject[] tiles, float moveCost) {
+		
+	Node LayoutTile (Vector3 pos, GameObject[] tiles) {
 		var tX = pos.x * tileSize;
 		var tY = pos.y * tileSize;
 
 		// Choose a random tile from tileArray and assign it to tileChoice
 		GameObject tileChoice = tiles[Random.Range (0, tiles.Length)];
 
-		var tile = LeanPool.Spawn (tileChoice);
+		GameObject tile = LeanPool.Spawn (tileChoice);
 		tile.transform.position = new Vector3 (tX, tY, 0);
 
 		_nodes [(int) pos.x, (int) pos.y].obj = tile;
 		_nodes [(int)pos.x, (int)pos.y].position = pos;
-		_nodes [(int)pos.x, (int)pos.y].moveCost = moveCost;
 
 		// Set the parent of our newly instantiated object instance to boardHolder, 
 		// this is just organizational to avoid cluttering hierarchy.
 		tile.transform.SetParent (boardHolder);
+
+		return _nodes [(int) pos.x, (int) pos.y];
 	}
 
 	/*
 	 * LayoutBuildingAtRandom accepts a game object and places it randomly
 	 */
-	Vector3 LayoutBuildingAtRandom (GameObject tileChoice, Locations.Location loc) { 
+	Node LayoutBuildingAtRandom (GameObject tileChoice, Locations.Location loc) { 
 		Vector3 randomPosition = RandomPosition();
 
 		GameObject[] _tileChoice = new GameObject[1];
 		_tileChoice [0] = tileChoice;
-		LayoutTile(randomPosition, _tileChoice, BUILDING_MOVEMENT_COST);
+		Node _node = LayoutTile(randomPosition, _tileChoice);
 
 		if (OnBuildingCreate != null) {
 			OnBuildingCreate (loc, randomPosition);
 		}
 
-		return randomPosition;
+		return _node;
 	}
 
+	private void setupCosts(Node node, float moveCost, float soundCost) {
+		node.moveCost = moveCost;
+		node.soundCost = soundCost;
+	}
 
 	//SetupScene initializes our level and calls the previous functions to lay out the game board
 	public void SetupScene () {
@@ -218,14 +208,22 @@ public class BoardManager : MonoBehaviour {
 
 		// layout our assets at random 
 		LayoutMountains();
-		LayoutBuildingAtRandom (shack, Locations.Location.Shack);
-		LayoutBuildingAtRandom (mine, Locations.Location.GoldMine);
-		LayoutBuildingAtRandom (bank, Locations.Location.Bank);
-		LayoutBuildingAtRandom (sherrifsOffice, Locations.Location.SheriffsOffice);
-		LayoutBuildingAtRandom (outlawCamp, Locations.Location.OutLawCamp);
-		LayoutBuildingAtRandom (cemetery, Locations.Location.Cemetery);
-		LayoutBuildingAtRandom (saloon, Locations.Location.Saloon);
-		LayoutBuildingAtRandom (undertakers, Locations.Location.Undertakers);
+		Node shackNode = LayoutBuildingAtRandom (shack, Locations.Location.Shack);
+		setupCosts (shackNode, BUILDING_MOVEMENT_COST, 10.0f);
+		Node mineNode = LayoutBuildingAtRandom (mine, Locations.Location.GoldMine);
+		setupCosts (mineNode, BUILDING_MOVEMENT_COST, 10.0f);
+		Node bankNode = LayoutBuildingAtRandom (bank, Locations.Location.Bank);
+		setupCosts (bankNode, BUILDING_MOVEMENT_COST, 10.0f);
+		Node sheriffOfficeNode = LayoutBuildingAtRandom (sherrifsOffice, Locations.Location.SheriffsOffice);
+		setupCosts (sheriffOfficeNode, BUILDING_MOVEMENT_COST, 10.0f);
+		Node outlawCampNode = LayoutBuildingAtRandom (outlawCamp, Locations.Location.OutLawCamp);
+		setupCosts (outlawCampNode, BUILDING_MOVEMENT_COST, 10.0f);
+		Node cemeteryNode = LayoutBuildingAtRandom (cemetery, Locations.Location.Cemetery);
+		setupCosts (cemeteryNode, BUILDING_MOVEMENT_COST, 20.0f);
+		Node saloonNode = LayoutBuildingAtRandom (saloon, Locations.Location.Saloon);
+		setupCosts (saloonNode, BUILDING_MOVEMENT_COST, 4.0f);
+		Node undertakerNode = LayoutBuildingAtRandom (undertakers, Locations.Location.Undertakers);
+		setupCosts (undertakerNode, BUILDING_MOVEMENT_COST, 10.0f);
 	}
 }
 
