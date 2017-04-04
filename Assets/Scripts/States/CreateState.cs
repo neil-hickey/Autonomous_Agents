@@ -4,17 +4,9 @@ public sealed class CreateState : State {
 	
 	static readonly CreateState instance = new CreateState();
 	
-	public static CreateState Instance {
-		get {
-			return instance;
-		}
-	}
-	
-	static CreateState () {}
-	private CreateState () {}
-	
-	public override void Enter (Agent agent) {
+	public static CreateState Instance { get {return instance;} }
 
+	public override void Enter (Agent agent) {
 		Debug.Log("Gathering creative energies...");
 	}
 	
@@ -28,6 +20,6 @@ public sealed class CreateState : State {
 	}
 	
 	public override void Exit (Agent agent) {
-
+		// do nothing
 	}
 }

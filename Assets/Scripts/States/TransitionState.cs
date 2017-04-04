@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+/**
+ * The transition state moves an agent from one location to another, using A Star to determine the path
+ * 
+ */ 
 public sealed class TransitionState : State {
 
 	List<Node> path = new List<Node>();

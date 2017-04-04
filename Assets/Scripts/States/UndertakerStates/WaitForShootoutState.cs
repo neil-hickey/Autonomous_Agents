@@ -5,11 +5,7 @@ public sealed class WaitForShootoutState : State {
 
 	static WaitForShootoutState instance;
 
-	public static WaitForShootoutState Instance {
-		get {
-			return instance;
-		}
-	}
+	public static WaitForShootoutState Instance { get {return instance;} }
 
 	public State nextState;
 	public bool eventOccured = false;
@@ -44,6 +40,6 @@ public sealed class WaitForShootoutState : State {
 	}
 
 	public override void Exit (Agent agent) {
-
+		// do nothing
 	}
 }

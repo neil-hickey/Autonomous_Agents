@@ -6,11 +6,8 @@ public class DepositAtBankState : State {
 	static readonly DepositAtBankState instance = new DepositAtBankState();
 	public static DepositAtBankState Instance {get{return instance;}}
 
-	static DepositAtBankState () {}
-	private DepositAtBankState () {}
-
 	public override void Enter (Agent agent) {
-
+		// do nothing
 	}
 
 	public override void Execute (Agent agent) {
@@ -25,7 +22,7 @@ public class DepositAtBankState : State {
 	}
 
 	public override void Exit (Agent agent) {
-
+		// do nothing
 	}
 
 }
