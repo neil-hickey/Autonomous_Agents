@@ -25,31 +25,17 @@ public class Wyatt : Agent {
 
 	public override void Update () {
 		this.stateMachine.Update();
-//		checkSenses ();
-//
-//		List<RaycastHit2D> objs = RayCast ("Wyatt");
-//		if (objs.Count > 0) {
-//			foreach (RaycastHit2D o in objs) {
-//				GameObject go = o.collider.gameObject;
-//				if (PlayerManager.Instance.playerScriptPairings.ContainsKey (go)) {
-//					Agent agent;
-//					PlayerManager.Instance.playerScriptPairings.TryGetValue (go, out agent);
-//
-//					if (agent is Jesse) {
-//						Debug.LogError ("IM LOOKING @ THE OUTLAW");
-//					}
-//				}
-//			}
-//		}
-
 	}
-
+		
 	public override void checkSenses() {
 		PlayerManager.Instance.senseAgents (this);
 	}
 
 	public override void SenseEventOccured(SenseEvent theEvent) {
 		switch (theEvent.senseType) {
+		case SenseEvent.SenseType.SIGHT:
+			Debug.Log("Wyatt can see something at: " + theEvent.sourcePosition);
+			break;
 		case SenseEvent.SenseType.HEARING:
 			Debug.Log("Wyatt can hear something coming from: " + theEvent.sourcePosition);
 			break;
@@ -58,11 +44,11 @@ public class Wyatt : Agent {
 		}
 	}
 
-	/**
-	 * Function to check if the outlaw is in the sheriffs current location
-	 *  Issues a greeting if another agent exists here, but isnt the outlaw
-	 * @return Jesse / null - returns the outlaw agent or null if no outlaw 
-	 */
+	/// <summary>
+	/// Function to check if the outlaw is in the sheriffs current location
+	///  Issues a greeting if another agent exists here, but isnt the outlaw
+	/// </summary>
+	/// <returns>Jesse / null - returns the outlaw agent or null if no outlaw </returns>
 	public Jesse checkLocationForOutlaw() {
 		List<Agent> agents = PlayerManager.Instance.getAgentsAtMyLocation (this);
 
@@ -78,6 +64,10 @@ public class Wyatt : Agent {
 		return null;
 	}
 		
+	/// <summary>
+	/// Performs the shootout.
+	/// </summary>
+	/// <param name="jesse">Jesse.</param>
 	public void performShootout (Jesse jesse) {
 		Debug.Log ("Shot the outlaw!");
 		int loot = jesse.totalLoot;
@@ -92,7 +82,9 @@ public class Wyatt : Agent {
 		Debug.Log ("Sheriff has loot: " + this.recoveredLoot);
 	}
 
-
+	/// <summary>
+	/// Checks the loot and if we have loot, sets the goal location the bank
+	/// </summary>
 	public void checkLootAndDeliver() {
 		if (this.recoveredLoot > 0) { 
 			this.goalLocation = Locations.Location.Bank;
@@ -103,9 +95,9 @@ public class Wyatt : Agent {
 		Debug.Log("HOWDY!");
 	}
 
-	/**
-	 * Function to swap Wyatts Location randomly, exluding the outlaw camp and the special on the move location
-	 */ 
+	/// <summary>
+	/// Function to swap Wyatts Location randomly, exluding the outlaw camp and the special on the move location
+	/// </summary>
 	public void swapLocationRandomly() {
 		// remove the outlaw camp, because the sheriff should never know about it!
 		var data = Enum

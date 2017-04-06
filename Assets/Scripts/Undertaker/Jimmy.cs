@@ -27,6 +27,9 @@ public class Jimmy : Agent {
 
 	public override void SenseEventOccured(SenseEvent theEvent) {
 		switch (theEvent.senseType) {
+		case SenseEvent.SenseType.SIGHT:
+			Debug.Log("Jimmy can see something at: " + theEvent.sourcePosition);
+			break;
 		case SenseEvent.SenseType.HEARING:
 			Debug.Log("Jimmy can hear something coming from: " + theEvent.sourcePosition);
 			break;

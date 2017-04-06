@@ -55,6 +55,7 @@
      <Compile Include="Assets\LeanPool\Scripts\LeanPooledRigidbody2D.cs" />
      <Compile Include="Assets\Scripts\Agent.cs" />
      <Compile Include="Assets\Scripts\Astar\AStar.cs" />
+     <Compile Include="Assets\Scripts\Astar\AStarNode.cs" />
      <Compile Include="Assets\Scripts\Astar\DoublyLinkedList\DLLNode.cs" />
      <Compile Include="Assets\Scripts\Astar\DoublyLinkedList\DoublyLinkedList.cs" />
      <Compile Include="Assets\Scripts\Astar\DoublyLinkedList\TESTDLL.cs" />

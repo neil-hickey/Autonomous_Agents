@@ -6,17 +6,27 @@ public class DoublyLinkedList {
 	private DLLNode head;
 	public int count;
 
-	// constructor
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DoublyLinkedList"/> class.
+	/// </summary>
 	public DoublyLinkedList() {
 		head = null;
 		count = 0;
 	}
 
+	/// <summary>
+	/// Gets the count.
+	/// </summary>
+	/// <value>The count.</value>
 	public int Count {
 		get { return count; }
 	}
 		
-	public DLLNode Insert(Node node) {
+	/// <summary>
+	/// Insert the specified node.
+	/// </summary>
+	/// <param name="node">Node.</param>
+	public DLLNode Insert(AStarNode node) {
 		int pos = 0;
 		DLLNode current = head;
 		DLLNode previous = null;
@@ -47,6 +57,10 @@ public class DoublyLinkedList {
 		return n;
 	}
 
+	/// <summary>
+	/// Delete the specified p.
+	/// </summary>
+	/// <param name="p">P.</param>
 	public bool Delete(DLLNode p)  {
 		// fetch value at position i
 		if (p == null) {
@@ -74,6 +88,11 @@ public class DoublyLinkedList {
 		return true;
 	}
 
+	/// <summary>
+	/// Gets the value.
+	/// </summary>
+	/// <returns>The value.</returns>
+	/// <param name="i">The index.</param>
 	public DLLNode GetValue(int i) // fetch value at position i
 	{
 		DLLNode p = head;
@@ -85,10 +104,18 @@ public class DoublyLinkedList {
 		return p;
 	}
 
+	/// <summary>
+	/// Gets the head.
+	/// </summary>
+	/// <returns>The head.</returns>
 	public DLLNode getHead() {
 		return GetValue (0);
 	}
-		
+
+	/// <summary>
+	/// Tos the string.
+	/// </summary>
+	/// <returns>The string.</returns>
 	public String toString() {
 		String s = "";
 

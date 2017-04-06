@@ -13,11 +13,11 @@ public class Jesse : Agent {
 	public void Awake () {
 		init ();
 	}
-		
-	/**
-	 * Initialization function for Jesse
-	 * 	Resets the instance variables and resets the statemachine
-	 */ 
+
+	/// <summary>
+	/// Initialization function for Jesse
+	/// 	Resets the instance variables and resets the statemachine
+	/// </summary>
 	public void init() {
 		this.isAlive = true;
 		this.totalLoot = 0;
@@ -41,12 +41,12 @@ public class Jesse : Agent {
 		this.createdTime++;
 		this.waitedTime = 0;
 	}
-
-	/**
-	 * Rob the bank of a random amount
-	 *  Publishes the event to any subscribers, notifying them of the robbery
-	 *  @return int amount - random int in range (1,10) which Jesse has stolen
-	 */ 
+		
+	/// <summary>
+	/// Rob the bank of a random amount
+	/// Publishes the event to any subscribers, notifying them of the robbery
+	/// </summary>
+	/// <returns>int amount - random int in range (1,10) which Jesse has stolen</returns>
 	public int robBank() {
 		if (OnBankRobbery != null)
 			// broadcast the robbery to subscribers
@@ -98,6 +98,9 @@ public class Jesse : Agent {
 
 	public override void SenseEventOccured(SenseEvent theEvent) {
 		switch (theEvent.senseType) {
+		case SenseEvent.SenseType.SIGHT:
+			Debug.Log("Jesse can see something at: " + theEvent.sourcePosition);
+			break;
 		case SenseEvent.SenseType.HEARING:
 			Debug.Log("Jesse can hear something coming from: " + theEvent.sourcePosition);
 			break;
@@ -105,19 +108,19 @@ public class Jesse : Agent {
 			break;
 		}
 	}
-		
-	/**
-	 * Helper function to move Jesse to the bank.
-	 */
+
+	/// <summary>
+	/// Helper function to move Jesse to the bank.
+	/// </summary>
 	public void moveToBank() {
 		this.goalLocation = Locations.Location.Bank;
 	}
-
-	/**
-	 * Swap Jesse's location to:
-	 *  1) OutlawCamp / Cemetery from the bank
-	 *  2) Swap between cemetery and outlawcamp
-	 */ 
+		
+	/// <summary>
+	/// Swap Jesse's location to:
+	///  1) OutlawCamp / Cemetery from the bank
+	///  2) Swap between cemetery and outlawcamp
+	/// </summary>
 	public void swapLocation() {
 		switch (this.currentLocation) {
 		case Locations.Location.Bank:

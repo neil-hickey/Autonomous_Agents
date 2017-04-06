@@ -32,9 +32,7 @@ public class GameManager : MonoBehaviour
 		BoardManager.instance = boardScript;
 
 		playersScript = GetComponent<PlayerManager>();
-
-//		PlayerManager.Instance.debugMovement = true;
-	
+			
 		new Locations ();
 
 		// Call the InitGame function to initialize the first level 
@@ -55,8 +53,6 @@ public class GameManager : MonoBehaviour
 
 	// this is called every frame
 	void Update() {
-		// update players
-		playersScript.updatePlayers();
 
 	}
 

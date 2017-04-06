@@ -9,9 +9,9 @@ public class BoardManager : MonoBehaviour {
 	public static BoardManager Instance { get { return instance; } set { instance = value; } }
 
 	// constants 
-	public const float BUILDING_MOVEMENT_COST = 500.0f;
-	public const float TERRAIN_MOVEMENT_COST = 5.0f, TERRAIN_SOUND_COST = 1.0f;
-	public const float MOUNTAIN_MOVEMENT_COST = 15.0f, MOUNTAIN_SOUND_COST = 20.0f;
+	public const float BUILDING_MOVEMENT_COST = 5.0f, BUILDING_SIGHT_COST = 10.0f;
+	public const float TERRAIN_MOVEMENT_COST = 5.0f, TERRAIN_SOUND_COST = 1.0f, TERRAIN_SIGHT_COST = 1.0f;
+	public const float MOUNTAIN_MOVEMENT_COST = 15.0f, MOUNTAIN_SOUND_COST = 20.0f, MOUNTAIN_SIGHT_COST = 1000.0f;
 	public const float tileSize = 1f;
 
 	// Delegates / events
@@ -38,9 +38,9 @@ public class BoardManager : MonoBehaviour {
 	public int[,] _debugMovement {get;set;}
 
 
-	/*
-	 * Clears our list gridPositions and prepares it to generate a new board.
-	 */
+	/// <summary>
+	/// Clears our list gridPositions and prepares it to generate a new board.
+	/// </summary>
 	void InitialiseList () {
 		_nodes = new Node[(int) MapSize.x, (int)MapSize.y];
 		_groundTiles = new GameObject[(int) MapSize.x, (int)MapSize.y];
@@ -56,10 +56,10 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 	}
-
-	/* 
-	 * Sets up the outer walls and floor (background) of the game board.
-	 */
+		
+	/// <summary>
+	/// Sets up the outer walls and floor (background) of the game board.
+	/// </summary>
 	void BoardSetup () {
 
 		// ensure we despawn the threads if they exist... 
@@ -109,20 +109,20 @@ public class BoardManager : MonoBehaviour {
 					_nodes [x, y].obj = tile;
 					var _debugTile = LeanPool.Spawn (debugTile);
 					_debugTile.transform.position = new Vector3 (tX, tY, 0);
+					_debugTile.GetComponent<SpriteRenderer>().color = new Color (0.0f, 0.0f, 0.0f, 0.0f);
 
 					_groundTiles [x, y] = _debugTile;
 					_nodes [x, y].position = tile.transform.position;
-					setupCosts (_nodes [x, y], TERRAIN_MOVEMENT_COST, TERRAIN_SOUND_COST);
-//					_nodes [x, y].moveCost = TERRAIN_MOVEMENT_COST;
+					setupCosts (_nodes [x, y], TERRAIN_MOVEMENT_COST, TERRAIN_SOUND_COST, TERRAIN_SIGHT_COST);
 				}
 			}
 		}
 	}
-
-
-	/**
-	 * RandomPosition returns a random position from our list gridPositions.
-	 */
+		
+	/// <summary>
+	/// RandomPosition returns a random position from our list gridPositions.
+	/// </summary>
+	/// <returns>The position.</returns>
 	Vector3 RandomPosition () {
 		// Declare an integer randomIndex, set it's value to a random number 
 		// between 0 and the count of items in our List gridPositions.
@@ -134,14 +134,13 @@ public class BoardManager : MonoBehaviour {
 		return randomPosition;
 	}
 
-
 	void LayoutMountains() {
 		int removed = 0;
 		for (int x = 0; x < MapSize.x; x++) {
 			for (int y = 0; y < MapSize.y; y++) {
 				if (mapGenerator.map [x, y] == 0) {
 					Node mountainNode = LayoutTile (new Vector3 (x, y, 0), mountainTiles);
-					setupCosts (mountainNode, MOUNTAIN_MOVEMENT_COST, MOUNTAIN_SOUND_COST);
+					setupCosts (mountainNode, MOUNTAIN_MOVEMENT_COST, MOUNTAIN_SOUND_COST, MOUNTAIN_SIGHT_COST);
 
 					// bit of fancy 2D to 1D array conversions..
 					// basically -> if x = 1, y = 1, its actually position 11 if mapysize is 10
@@ -190,9 +189,10 @@ public class BoardManager : MonoBehaviour {
 		return _node;
 	}
 
-	private void setupCosts(Node node, float moveCost, float soundCost) {
+	private void setupCosts(Node node, float moveCost, float soundCost, float sightCost) {
 		node.moveCost = moveCost;
 		node.soundCost = soundCost;
+		node.sightCost = sightCost;
 	}
 
 	//SetupScene initializes our level and calls the previous functions to lay out the game board
@@ -204,26 +204,26 @@ public class BoardManager : MonoBehaviour {
 		BoardSetup ();
 
 		// generate our mountain map shall we? :D
-		this.mapGenerator = new MapGenerator ((int)MapSize.x, (int)MapSize.y, "57.08", false, 38);
+		this.mapGenerator = new MapGenerator ((int)MapSize.x, (int)MapSize.y, "20.08", false, 34);
 
 		// layout our assets at random 
 		LayoutMountains();
 		Node shackNode = LayoutBuildingAtRandom (shack, Locations.Location.Shack);
-		setupCosts (shackNode, BUILDING_MOVEMENT_COST, 10.0f);
+		setupCosts (shackNode, BUILDING_MOVEMENT_COST, 10.0f, BUILDING_SIGHT_COST);
 		Node mineNode = LayoutBuildingAtRandom (mine, Locations.Location.GoldMine);
-		setupCosts (mineNode, BUILDING_MOVEMENT_COST, 10.0f);
+		setupCosts (mineNode, BUILDING_MOVEMENT_COST, 10.0f, 1000.0f);
 		Node bankNode = LayoutBuildingAtRandom (bank, Locations.Location.Bank);
-		setupCosts (bankNode, BUILDING_MOVEMENT_COST, 10.0f);
+		setupCosts (bankNode, BUILDING_MOVEMENT_COST, 10.0f, BUILDING_SIGHT_COST);
 		Node sheriffOfficeNode = LayoutBuildingAtRandom (sherrifsOffice, Locations.Location.SheriffsOffice);
-		setupCosts (sheriffOfficeNode, BUILDING_MOVEMENT_COST, 10.0f);
+		setupCosts (sheriffOfficeNode, BUILDING_MOVEMENT_COST, 10.0f, BUILDING_SIGHT_COST);
 		Node outlawCampNode = LayoutBuildingAtRandom (outlawCamp, Locations.Location.OutLawCamp);
-		setupCosts (outlawCampNode, BUILDING_MOVEMENT_COST, 10.0f);
+		setupCosts (outlawCampNode, BUILDING_MOVEMENT_COST, 10.0f, BUILDING_SIGHT_COST);
 		Node cemeteryNode = LayoutBuildingAtRandom (cemetery, Locations.Location.Cemetery);
-		setupCosts (cemeteryNode, BUILDING_MOVEMENT_COST, 20.0f);
+		setupCosts (cemeteryNode, BUILDING_MOVEMENT_COST, 20.0f, 2.0f);
 		Node saloonNode = LayoutBuildingAtRandom (saloon, Locations.Location.Saloon);
-		setupCosts (saloonNode, BUILDING_MOVEMENT_COST, 4.0f);
+		setupCosts (saloonNode, BUILDING_MOVEMENT_COST, 4.0f, BUILDING_SIGHT_COST);
 		Node undertakerNode = LayoutBuildingAtRandom (undertakers, Locations.Location.Undertakers);
-		setupCosts (undertakerNode, BUILDING_MOVEMENT_COST, 10.0f);
+		setupCosts (undertakerNode, BUILDING_MOVEMENT_COST, 10.0f, BUILDING_SIGHT_COST);
 	}
 }
 

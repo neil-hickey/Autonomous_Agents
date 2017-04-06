@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 
 public abstract class Agent : MonoBehaviour {
+	public enum Direction {UP, DOWN, LEFT, RIGHT}
+
 	public abstract void Update ();
 	public abstract void ChangeState (State state);
 	public abstract void SenseEventOccured(SenseEvent theEvent);
@@ -14,8 +18,6 @@ public abstract class Agent : MonoBehaviour {
 	public Node currentNode;
 	public Vector3 currentPosition;
 	public Vector3 goalPosition; 
-	public bool spotted = false;
-	public bool debugRaycasting = false;
 	public bool isAlive = true;
 
 	public Vector3 GoalPosition {
@@ -30,25 +32,24 @@ public abstract class Agent : MonoBehaviour {
 		this.ChangeState (new TransitionState (nextState));
 	}
 		
-	public List<RaycastHit2D> RayCast (string name) {
-		List<RaycastHit2D> objs = new List<RaycastHit2D> ();
+	public Dictionary<Direction, RaycastHit2D[]> RayCast (string name, bool debugRaycasting) {
+		Dictionary<Direction, RaycastHit2D[]> objs = new Dictionary<Direction, RaycastHit2D[]> ();
 		Node[,] graph = GameManager.instance.boardScript._nodes;
 		Node currNode = graph [(int)this.currentPosition.x, (int)this.currentPosition.y];
 
-		List<Node> neighbours = currNode.getNeighbours (graph, 2);
-		foreach (Node neighbor in neighbours) {
-//			if (debugRaycasting)
-//				Debug.DrawLine (this.currentPosition, neighbor.position, Color.blue);
+		foreach (Direction direction in Enum.GetValues(typeof(Direction))) {
+			Node furthestNode = currNode.getFurthestNodeFromThis (2, direction);
+			if (furthestNode != null) {
+				if (debugRaycasting)
+					Debug.DrawLine (this.currentPosition, furthestNode.position, Color.blue);
 
-			var layerMask = ~(1 << LayerMask.NameToLayer (name));
+				var layerMask = ~(1 << LayerMask.NameToLayer (name));
 
-			spotted = Physics2D.Linecast (this.currentPosition, neighbor.position, layerMask);
-			if (spotted) {
-				RaycastHit2D[] hitObject = Physics2D.RaycastAll (this.currentPosition, neighbor.position, layerMask);
+				bool spotted = Physics2D.Linecast (this.currentPosition, furthestNode.position, layerMask);
+				if (spotted) {
+					RaycastHit2D[] hitObjects = Physics2D.RaycastAll (this.currentPosition, furthestNode.position, layerMask);
 
-
-				foreach (RaycastHit2D o in hitObject) {
-					objs.Add (o);
+					objs.Add (direction, hitObjects);
 				}
 			}
 		}
